@@ -4,7 +4,8 @@ const User = require("../model/User");
 exports.register = async (req, res) => {
   try {
     //Find user with the same email in the database
-    let isUser = await User.find({ email: req.body.email });
+    //Cast input as Strings to prevent NoSQL Object
+    let isUser = await User.find({ email: String(req.body.email) });
 
     //If there's an user with the register's email
     if (isUser.length >= 1) {
@@ -15,10 +16,11 @@ exports.register = async (req, res) => {
     }
 
     //If the register's email have not been used then create a new user
+    //Cast input as Strings to prevent NoSQL Object
     const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password
+      name: String(req.body.name),
+      email: String(req.body.email),
+      password: String(req.body.password)
     });
     //Stored and respond with the user detail + JWT token
     let data = await user.save();
@@ -37,14 +39,14 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     //Obtain email and password from request body
-    const {email,  password}  = req.body;
+    //Cast input as Strings to prevent NoSQL Object
+    const email = String(req.body.email);
+    const password = String(req.body.password);
 
-    
-    // ----------EXPLOIT---------- // 
-    const user = await User.findOne({email,password}).exec();
-    // This method use the findOne function which can be exploited
-    // ----------EXPLOIT---------- // 
-
+    console.log(email);
+    console.log(password);
+    //Find a user with the same email and password
+    const user = await User.findOne({email, password});
 
     //Respond with and error if can't an user
     if (!user) {
