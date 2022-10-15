@@ -3,6 +3,7 @@
 ## Project requirement
 MongoDB
 ```
+sudo apt update
 sudo apt-get install -y mongodb-org
 ```
 NodeJS + npm
