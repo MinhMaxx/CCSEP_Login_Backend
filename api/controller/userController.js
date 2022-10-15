@@ -23,8 +23,6 @@ exports.register = async (req, res) => {
     //Stored and respond with the user detail + JWT token
     let data = await user.save();
     const token = await user.generateAuthToken();
-    data.password = null;
-    data.tokens = null;
     res.status(201).json({ data, token });
   } catch (err) {
     //Respond with and error if caught one
@@ -55,8 +53,6 @@ exports.login = async (req, res) => {
 
     //Respond with JWT token if user cretidential is correct
     const token = await user.generateAuthToken();
-    user.password = null;
-    user.tokens = null;
     res.status(201).json({ user, token });
   } catch (err) {
     //Respond with and error if caught one
