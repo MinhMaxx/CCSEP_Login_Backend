@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
 
     
     // ----------EXPLOIT---------- // 
-    const user = await User.findOne({email,password}).exec();
+    const user = await User.findByCredentials(email,password);
     // This method use the findOne function which can be exploited
     // ----------EXPLOIT---------- // 
 
@@ -60,7 +60,7 @@ exports.login = async (req, res) => {
     res.status(201).json({ user, token });
   } catch (err) {
     //Respond with and error if caught one
-    res.status(400).json({ err: err });
+    res.status(400).json({ err: err.message});
   }
 };
 

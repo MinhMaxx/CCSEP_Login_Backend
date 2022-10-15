@@ -26,6 +26,15 @@ const userSchema = mongoose.Schema({
   ]
 });
 
+// Hash the password before saving the user model
+userSchema.pre("save", async function(next) {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  next();
+});
+
 //Genarate JWT token as encoded user detail
 userSchema.methods.generateAuthToken = async function() {
   const user = this;
@@ -37,6 +46,26 @@ userSchema.methods.generateAuthToken = async function() {
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
+};
+
+//Search for a user by email then compare passsword with the encrypted password
+userSchema.statics.findByCredentials = async (email, password) => {
+  try
+  {
+    const user = await User.findOne({ email });
+    console.log(user);
+    if (!user) {
+      throw new Error({ error: "Incorrect email or password!" });
+    }
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      throw new Error({ error: "Incorrect email or password!" });
+    }
+    return user;
+  }
+  catch(err){
+    return null;
+  }
 };
 
 const User = mongoose.model("User", userSchema);
