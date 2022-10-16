@@ -39,12 +39,8 @@ exports.login = async (req, res) => {
     //Obtain email and password from request body
     const {email,  password}  = req.body;
 
-    
-    // ----------EXPLOIT---------- // 
+    //Change from using findOne to findByCredentials to implement better security
     const user = await User.findByCredentials(email,password);
-    // This method use the findOne function which can be exploited
-    // ----------EXPLOIT---------- // 
-
 
     //Respond with and error if can't an user
     if (!user) {
