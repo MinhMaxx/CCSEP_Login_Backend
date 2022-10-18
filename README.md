@@ -1,5 +1,8 @@
 # server
 
+This is the NoSQL exploitable backend service
+Please switch to other branch for the NoSQL patches
+
 ## Project requirement
 MongoDB
 ```
